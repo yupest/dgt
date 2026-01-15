@@ -330,7 +330,7 @@
             {
                 id: 9,
                 name: "Медианный композит",
-                template: (params) => `Для текущего полигона N=${params.N} получить медианный композит на заданную дату DATE=${DATE} в синтезе каналов ${params.CHANNELS}.`,
+                template: (params) => `Для текущего полигона N=${params.N} получить медианный композит на заданную дату DATE=${params.DATE} в синтезе каналов ${params.CHANNELS}.`,
                 generateParams: () => ({
                     N: randomInt(1, 1000),
                     CHANNELS: randomChoice([
@@ -411,14 +411,14 @@
             }
             
             // Для задачи 9 добавляем дату как отдельный параметр
-            if (taskTemplate.id === 9) {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span class="param-name">Дата</span>
-                    <span class="param-value">${params.DATE}</span>
-                `;
-                paramsContainer.appendChild(li);
-            }
+            // if (taskTemplate.id === 9) {
+            //     const li = document.createElement('li');
+            //     li.innerHTML = `
+            //         <span class="param-name">Дата</span>
+            //         <span class="param-value">${params.DATE}</span>
+            //     `;
+            //     paramsContainer.appendChild(li);
+            // }
             
             // Сохраняем задачу в localStorage
             localStorage.setItem('lastTask', JSON.stringify({
