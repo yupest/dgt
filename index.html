@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор задач по геоанализу</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        #newTaskBtn {
+            background: #2ecc71;
+        }
+        
+        #newTaskBtn:hover {
+            background: #27ae60;
+        }
+        
+        .task-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .task-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        
+        .task-description {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #34495e;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            min-height: 120px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        .task-params {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .task-params h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .params-list {
+            list-style-type: none;
+        }
+        
+        .params-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .params-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .param-name {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .param-value {
+            color: #3498db;
+            font-weight: 600;
+        }
+        
+        .task-number {
+            font-size: 1rem;
+            color: #7f8c8d;
+            background: #f1f8ff;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .task-type {
+            font-size: 1.1rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-description {
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 Генератор задач по геоанализу</h1>
+        <p class="subtitle">Иркутская область | Обновляйте страницу для новой задачи</p>
+        <a href = "https://disk.yandex.ru/d/1p7DvHRwErJm5g">Данные</a>
+    </header>
+    
+    <div class="container">
+        <div class="controls">
+            <button id="newTaskBtn">🎲 Сгенерировать новую задачу</button>
+            <button onclick="window.location.reload()">🔄 Обновить страницу</button>
+        </div>
+        
+        <div class="task-section">
+            <div class="task-header">
+                <h2>📝 Задача</h2>
+                <div class="task-number">Тип задачи: <span id="taskType">1</span></div>
+            </div>
+            
+            <div id="taskDescription" class="task-description">
+                <!-- Сюда вставляется задача -->
+            </div>
+            
+            <div class="task-params">
+                <h3>📊 Параметры задачи:</h3>
+                <ul id="taskParams" class="params-list">
+                    <!-- Сюда вставляются параметры -->
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Генератор задач по дистанционному зондированию и ГИС-анализу | Иркутская область | 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        // Генератор случайных чисел в диапазоне
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Выбор случайного элемента массива
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+        
+        // Массив задач с точным соответствием вашим формулировкам
+        const taskTemplates = [
+            {
+                id: 1,
+                name: "Визуализация расстояний",
+                template: (params) => `Для заданного полигона N=${params.N} сделать визуализацию удаления по расстоянию от него точек.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000)
+                })
+            },
+            {
+                id: 2,
+                name: "Визуализация данных",
+                template: (params) => `Для заданного полигона N=${params.N} сделать визуализацию TYPE=${params.TYPE}.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000),
+                    TYPE: randomChoice(["высоты (elev.tif)", "солнечной радиации (srad.tif)"])
+                })
+            },
+            {
+                id: 3,
+                name: "Анализ рельефа",
+                template: (params) => `Для заданного полигона N=${params.N} рассчитать и сделать визуализацию TYPE=${params.TYPE}.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000),
+                    TYPE: randomChoice(["крутизну склона", "аспект"])
+                })
+            },
+            {
+                id: 4,
+                name: "Спектральные индексы",
+                template: (params) => `Для заданного полигона N=${params.N} рассчитать индекс VI=${params.VI} на вегетационный период YEAR=${params.YEAR} года.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000),
+                    VI: randomChoice(["NDVI", "NBR", "PSRI"]),
+                    YEAR: randomInt(2001, 2025)
+                })
+            },
+            {
+                id: 5,
+                name: "Анализ изменений",
+                template: (params) => `Для заданного полигона N=${params.N} получить визуализацию изменения покрова за период YEAR=${params.YEAR}, YEAR+1, YEAR+2 года.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000),
+                    YEAR: randomInt(2001, 2021) // Чтобы YEAR+2 <= 2023
+                })
+            },
+            {
+                id: 6,
+                name: "Классификация поверхности",
+                template: (params) => `Для текущего полигона N=${params.N} сделать визуализацию с классами типов поверхности.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000)
+                })
+            },
+            {
+                id: 7,
+                name: "Полигоны Вороного",
+                template: (params) => `Для текущего полигона N=${params.N} получить полигоны Вороного на основе точечного слоя.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000)
+                })
+            },
+            {
+                id: 8,
+                name: "Анализ плотности полигонов",
+                template: (params) => `Для текущего полигона N=${params.N} построить визуализацию, которая показывает удаление других полигонов от него на основе полигонов Вороного.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000)
+                })
+            },
+            {
+                id: 9,
+                name: "Медианный композит",
+                template: (params) => `Для текущего полигона N=${params.N} получить медианный композит на заданную дату в синтезе каналов ${params.CHANNELS}.`,
+                generateParams: () => ({
+                    N: randomInt(1, 1000),
+                    CHANNELS: randomChoice([
+                        "(Red, Green, Blue)",
+                        "(NIR, Red, Green)",
+                        "(SWIR, NIR, Green)",
+                        "(NIR, SWIR, Blue)",
+                        "(NIR, SWIR, Red)",
+                        "(SWIR-2, SWIR-1, Red)",
+                        "(SWIR, NIR, R)"
+                    ]),
+                    DATE: `${randomInt(1, 28)}.${randomInt(1, 12)}.${randomInt(2015, 2024)}`
+                })
+            },
+            {
+                id: 10,
+                name: "Анализ плотности",
+                template: (params) => `Для всех полигонов рассчитать количество точек в радиусе ${params.RADIUS} км и составить визуализацию, которая показывает их взвешенную плотность.`,
+                generateParams: () => ({
+                    RADIUS: `${Math.ceil(randomInt(35, 100) / 5) * 5}`
+                })
+            }
+        ];
+        
+        // Генерация и отображение задачи
+        function generateTask() {
+            // Выбираем случайную задачу
+            const taskTemplate = randomChoice(taskTemplates);
+            
+            // Генерируем параметры для задачи
+            const params = taskTemplate.generateParams();
+            
+            // Генерируем текст задачи
+            const taskText = taskTemplate.template(params);
+            
+            // Отображаем задачу
+            document.getElementById('taskDescription').innerHTML = `
+                <div class="task-type">${taskTemplate.name}</div>
+                <div>${taskText}</div>
+            `;
+            
+            // Отображаем тип задачи
+            document.getElementById('taskType').textContent = `${taskTemplate.id}. ${taskTemplate.name}`;
+            
+            // Отображаем параметры
+            const paramsContainer = document.getElementById('taskParams');
+            paramsContainer.innerHTML = '';
+            
+            for (const [key, value] of Object.entries(params)) {
+                const li = document.createElement('li');
+                
+                // Форматируем ключ для отображения
+                let displayKey = key;
+                if (key === 'N') displayKey = 'Номер полигона (N)';
+                if (key === 'TYPE') displayKey = 'Тип данных (TYPE)';
+                if (key === 'VI') displayKey = 'Индекс (VI)';
+                if (key === 'YEAR') displayKey = 'Год (YEAR)';
+                if (key === 'CHANNELS') displayKey = 'Каналы (CHANNELS)';
+                if (key === 'DATE') displayKey = 'Дата';
+                if (key === 'RADIUS') displayKey = 'Радиус';
+                
+                li.innerHTML = `
+                    <span class="param-name">${displayKey}</span>
+                    <span class="param-value">${value}</span>
+                `;
+                paramsContainer.appendChild(li);
+            }
+            
+            // Для задачи 5 добавляем вычисленные годы
+            if (taskTemplate.id === 5) {
+                const year = params.YEAR;
+                const li1 = document.createElement('li');
+                li1.innerHTML = `
+                    <span class="param-name">Период анализа</span>
+                    <span class="param-value">${year}, ${year+1}, ${year+2}</span>
+                `;
+                paramsContainer.appendChild(li1);
+            }
+            
+            // Для задачи 9 добавляем дату как отдельный параметр
+            if (taskTemplate.id === 9) {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="param-name">Дата</span>
+                    <span class="param-value">${params.DATE}</span>
+                `;
+                paramsContainer.appendChild(li);
+            }
+            
+            // Сохраняем задачу в localStorage
+            localStorage.setItem('lastTask', JSON.stringify({
+                templateId: taskTemplate.id,
+                params: params,
+                timestamp: new Date().toISOString()
+            }));
+        }
+        
+        // Загрузка последней задачи при загрузке страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            const lastTask = localStorage.getItem('lastTask');
+            
+            if (lastTask) {
+                try {
+                    const taskData = JSON.parse(lastTask);
+                    const taskTemplate = taskTemplates.find(t => t.id === taskData.templateId);
+                    
+                    if (taskTemplate) {
+                        const taskText = taskTemplate.template(taskData.params);
+                        document.getElementById('taskDescription').innerHTML = `
+                            <div class="task-type">${taskTemplate.name}</div>
+                            <div>${taskText}</div>
+                        `;
+                        
+                        document.getElementById('taskType').textContent = `${taskTemplate.id}. ${taskTemplate.name}`;
+                        
+                        // Отображаем параметры
+                        const paramsContainer = document.getElementById('taskParams');
+                        paramsContainer.innerHTML = '';
+                        
+                        for (const [key, value] of Object.entries(taskData.params)) {
+                            const li = document.createElement('li');
+                            let displayKey = key;
+                            if (key === 'N') displayKey = 'Номер полигона (N)';
+                            if (key === 'TYPE') displayKey = 'Тип данных (TYPE)';
+                            if (key === 'VI') displayKey = 'Индекс (VI)';
+                            if (key === 'YEAR') displayKey = 'Год (YEAR)';
+                            if (key === 'CHANNELS') displayKey = 'Каналы (CHANNELS)';
+                            if (key === 'DATE') displayKey = 'Дата';
+                            if (key === 'RADIUS') displayKey = 'Радиус';
+                            
+                            li.innerHTML = `
+                                <span class="param-name">${displayKey}</span>
+                                <span class="param-value">${value}</span>
+                            `;
+                            paramsContainer.appendChild(li);
+                        }
+                        
+                        // Для задачи 5 добавляем вычисленные годы
+                        if (taskTemplate.id === 5) {
+                            const year = taskData.params.YEAR;
+                            const li1 = document.createElement('li');
+                            li1.innerHTML = `
+                                <span class="param-name">Период анализа</span>
+                                <span class="param-value">${year}, ${year+1}, ${year+2}</span>
+                            `;
+                            paramsContainer.appendChild(li1);
+                        }
+                        
+                        // Для задачи 9 добавляем дату как отдельный параметр
+                        if (taskTemplate.id === 9) {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <span class="param-name">Дата</span>
+                                <span class="param-value">${taskData.params.DATE}</span>
+                            `;
+                            paramsContainer.appendChild(li);
+                        }
+                        
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error loading last task:', e);
+                }
+            }
+            
+            // Иначе генерируем новую задачу
+            generateTask();
+        });
+        
+        // Обработчик кнопки генерации новой задачи
+        document.getElementById('newTaskBtn').addEventListener('click', generateTask);
+        
+        // Генерация при нажатии пробела
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+                e.preventDefault();
+                generateTask();
+            }
+        });
+    </script>
+</body>
+</html>
